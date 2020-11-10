@@ -1,0 +1,233 @@
+{
+	"info": {
+		"_postman_id": "efacdf9a-e291-49f2-a086-0bbc650969a9",
+		"name": "wv-payroll-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Upload Time Report (.csv)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "9e5bb9b8-9245-47c7-a213-9eaf04b0d551",
+						"exec": [
+							"pm.test(\"Response contains a message key\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.hasOwnProperty(\"message\")).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"Response message key is one of the possible string values\", function () {",
+							"    var jsonData = pm.response.json();",
+							"",
+							"    var possibleMessages = [",
+							"        \"No file uploaded\",",
+							"        \"timeReport file not included\",",
+							"        \"timeReport file already exists\",",
+							"        \"timeReport file uploaded successfully\"",
+							"    ];",
+							"",
+							"    pm.expect(possibleMessages.indexOf(jsonData.message) != -1).to.eql(true);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "timeReport",
+							"type": "file",
+							"src": "/Users/simar/SideProjects/wv-payroll-api/sample/time-report-1.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/time-report",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"time-report"
+					]
+				},
+				"description": "Endpoint used to upload the time report csv file.\n\n## Response Message\n\nA json object with a `message` key will be returned with the following possible string values:\n\n1) `No file uploaded`\n\n2) `timeReport file not included`\n\n3) `timeReport file already exists`\n\n4) `timeReport file uploaded successfully`\n\n\n## Sample File\n\nHere is the raw text of the sample file used in the example (`time-report-1.csv`): \n\n```\ndate,hours,worked,employee id,job group\n04/01/2020,10,1,A\n14/01/2020,5,1,A\n20/01/2020,3,2,B\n20/01/2020,4,1,A\n```"
+			},
+			"response": [
+				{
+					"name": "Upload Time Report (.csv)",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "timeReport",
+									"type": "file",
+									"src": "/Users/simar/SideProjects/wv-payroll-api/sample/time-report-1.csv"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:3000/time-report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"time-report"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "51"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"33-w4CJu0GXEh7kn+IPHGPbP7evsLs\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 10 Nov 2020 09:37:46 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"message\": \"timeReport file uploaded successfully\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Payroll Report",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "56f3df16-adc1-4e91-842d-2d33f485e965",
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"",
+							"pm.test(\"Response contains a payrollReport key\", function () {",
+							"    pm.expect(jsonData.hasOwnProperty(\"payrollReport\")).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"payrollReport object contains a employeeReports key\", function () {",
+							"    pm.expect(jsonData.payrollReport.hasOwnProperty(\"employeeReports\")).to.eql(true);",
+							"});",
+							"",
+							"pm.test(\"employeeReports object is an array\", function () {",
+							"    pm.expect(Array.isArray(jsonData.payrollReport.employeeReports)).to.eql(true);",
+							"});",
+							"",
+							"if (jsonData.payrollReport.employeeReports.length > 0) {",
+							"    pm.test(\"employeeReports array element contains expected keys\", function () {",
+							"        var jsonData = pm.response.json();",
+							"        var expectedKeys = [\"employeeId\", \"payPeriod\", \"amountPaid\"];",
+							"        for (let i = 0; i < expectedKeys.length; i++) {",
+							"            pm.expect(jsonData.payrollReport.employeeReports[0].hasOwnProperty(expectedKeys[i])).to.eql(true);",
+							"        }",
+							"    });",
+							"}",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/payroll-report",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"payroll-report"
+					]
+				},
+				"description": "Endpoint used to retrieve payroll report for all the employed sorted by employe id and pay period."
+			},
+			"response": [
+				{
+					"name": "Get Payroll Report",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/payroll-report",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"payroll-report"
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "json",
+					"header": [
+						{
+							"key": "X-Powered-By",
+							"value": "Express"
+						},
+						{
+							"key": "Content-Type",
+							"value": "application/json; charset=utf-8"
+						},
+						{
+							"key": "Content-Length",
+							"value": "343"
+						},
+						{
+							"key": "ETag",
+							"value": "W/\"157-/GC/lQzOGCb7IwAHZfRAYOKSb48\""
+						},
+						{
+							"key": "Date",
+							"value": "Tue, 10 Nov 2020 09:40:52 GMT"
+						},
+						{
+							"key": "Connection",
+							"value": "keep-alive"
+						}
+					],
+					"cookie": [],
+					"body": "{\n    \"payrollReport\": {\n        \"employeeReports\": [\n            {\n                \"employeeId\": 1,\n                \"payPeriod\": {\n                    \"startDate\": \"2020-01-01\",\n                    \"endDate\": \"2020-01-15\"\n                },\n                \"amountPaid\": \"$300.00\"\n            },\n            {\n                \"employeeId\": 1,\n                \"payPeriod\": {\n                    \"startDate\": \"2020-01-16\",\n                    \"endDate\": \"2020-01-31\"\n                },\n                \"amountPaid\": \"$80.00\"\n            },\n            {\n                \"employeeId\": 2,\n                \"payPeriod\": {\n                    \"startDate\": \"2020-01-16\",\n                    \"endDate\": \"2020-01-31\"\n                },\n                \"amountPaid\": \"$90.00\"\n            }\n        ]\n    }\n}"
+				}
+			]
+		}
+	],
+	"protocolProfileBehavior": {}
+}
