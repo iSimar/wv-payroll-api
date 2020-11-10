@@ -1,10 +1,8 @@
 # wv-payroll-api
-### By Simar Singh (mail@simarsingh.com)
-
+Side project
 
 ## API Documentation 
 API Documentation is hosted on Postman, [click here](https://documenter.getpostman.com/view/13333658/TVejiApd) to view it.
-
 
 ## Run API on Local Machine with one line
 Ideally on Mac OS
