@@ -27,6 +27,20 @@ Expected Response
 
 [Click here](https://documenter.getpostman.com/view/13333658/TVejiApd) for full API documentaion with all endpoints.
 
+## Design
+
+Basically used one table (in sqlite), that store 6 values per row: 
+    1) date (INT)
+    2) month (INT)
+    3) year (INT)
+    4) hours_worked (FLOAT)
+    5) employee_id (INT)
+    6) pay_group (STRING)
+
+When a file is uploaded, it parses through the csv and inserts new rows to the database, I parsed the date into 3 int values because its easier to work with when sorting on fetch.
+
+On generating the report, I sort by employee id, year, month, date -- then in that sorted manually create pay periods looping through all the sorted rows.
+
 ## Test Cases
 
 Postman file under postman directory also has test cases checking for proper responses for each of the endpoints.
